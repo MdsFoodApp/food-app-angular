@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
+[ -z "$FILES" ] && exit 0
+
+yarn lint
+
+# Prettify all selected files
+echo "$FILES" | xargs yarn lint
+
+# Add back the modified/prettified files to staging
+echo "$FILES" | xargs git add
+
+exit 0
